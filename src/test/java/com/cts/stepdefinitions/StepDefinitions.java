@@ -1,5 +1,6 @@
 package com.cts.stepdefinitions;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
@@ -8,8 +9,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import com.cts.pages.HomePage;
+import com.cts.pages.HomePage;
 import com.cts.pages.LoginPage;
 import com.cts.pages.MainPage;
+import com.cts.utils.ReadExcel;
 
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
@@ -41,31 +44,34 @@ driver.get("http://opencart.abstracta.us/");
 }
 
 //Scenario 1 : Login Details
-@When("I enter email as {string} and I enter password as {string}")
-public void i_enter_email_as_and_I_enter_password_as(String email, String password) 
-{
-HomePage homepage = new HomePage(driver);
-//click on myaccount
-homepage.clickOnMyAccount();
-//click on login
- homepage.clickOnLogin();
- LoginPage loginpage = new LoginPage(driver);
- //enter email
- loginpage.enterEmail(email);
- //enter password
- loginpage.enterPassword(password);
+@When("I enter login details from Excel {string} with SheetName {string}")
+public void i_enter_login_details_from_Excel_with_SheetName(String filedetails, String sheetname)
+		throws IOException {
+	//Taking the data form excel
+	String data[][] = ReadExcel.getSheetIntoStringArray("src/test/resources/resources/Book1.xlsx",
+			"Login");
+ HomePage homepage = new HomePage(driver);
+ //click on myaccount
+ homepage.clickOnMyAccount();
  //click on login
- loginpage.clickOnLogin();
- 
+   homepage.clickOnLogin();
+   LoginPage loginpage = new LoginPage(driver);
+   //enter email
+   loginpage.enterEmail(data[0][0]);
+   //enter password
+   loginpage.enterPassword(data[0][1]);
+   //click on login
+   loginpage.clickOnLogin();
+   
 }
-//Assertion
+// Assertion
 @Then("my account should access to the portal with title as {string}")
 public void my_account_should_access_to_the_portal_with_title_as(String string) 
 {
 	LoginPage loginpage = new LoginPage(driver);
-String actualTitle = loginpage.getCurrentTitle();
-String expectedTitle =loginpage.getCurrentTitle();
-Assert.assertEquals(expectedTitle, actualTitle);
+  String actualTitle = loginpage.getCurrentTitle();
+  String expectedTitle =loginpage.getCurrentTitle();
+  Assert.assertEquals(expectedTitle, actualTitle);
 
 }
 //Scenario 2 : Desktops
@@ -77,7 +83,7 @@ public void i_click_on_the_product_Desktops()
 	mainpage.clickOnDesktops();
 	//click on See all
 	mainpage.clickOnseeall();
-
+  
 }
 //Assertion
 @Then("I should get all Desktops")
@@ -99,7 +105,7 @@ public void i_click_on_the_product_Laptops_and_Notebooks()
 	mainpage.clickOnLaptopsandNotebooks();
 	//click on Showall
 	mainpage.clickOnShowAll();
-  
+    
 }
 //Assertion
 @Then("I should get all Laptops and Notebooks")
@@ -137,9 +143,9 @@ public void i_click_on_the_product_Tablets()
 {
 	MainPage mainpage = new MainPage(driver);
 	//click on tablets
-mainpage.clickOnTablets();
+  mainpage.clickOnTablets();
 }
-   //Assertion
+     //Assertion
 @Then("I should get all Tablets")
 public void i_should_get_all_Tablets() 
 {
@@ -148,7 +154,7 @@ public void i_should_get_all_Tablets()
 	Assert.assertEquals("Tablets", actualTitle);
 	System.out.println(actualTitle);
 }
-  //Scenario 5:Shoppingcart
+    //Scenario 5:Shoppingcart
 @When("I enter {string} and {string} click on shopping cart")
 public void i_enter_and_click_on_shopping_cart(String email, String password) 
 {
@@ -165,11 +171,11 @@ public void i_enter_and_click_on_shopping_cart(String email, String password)
 	 //click on Login
 	 loginpage.clickOnLogin();
 	 MainPage mainpage = new MainPage(driver);
-	 //click on Tablets
+	 //click on Tablets button
 	mainpage.clickOnTablets();
 	//click on Addtocart
 	mainpage.clickOnAddtoCart();
-	//click on Shoppingcart
+	//click on Shoppingcart button
 	mainpage.ClickOnShoppingCart();
 	
 }

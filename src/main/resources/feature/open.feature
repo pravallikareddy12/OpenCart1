@@ -8,7 +8,7 @@ Feature: OpenCartApplication
   
   
   Scenario: ValidRegisterCredentail
-  When I enter email as 'pravallika12@gmail.com' and I enter password as 'sunny123'
+  When I enter login details from Excel "src/test/resources/resources/Book1.xlsx" with SheetName "Login"
   Then my account should access to the portal with title as 'My Account'
   
   Scenario: ClickOnDesktops
